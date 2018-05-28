@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MicroPython</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+    <header>
+        <p class="title">欢迎使用 RT-Thread MicroPython</p>
+    </header>
+
+    <main>
+                <div class="row">
+                    <div class="name">RT-Thread 版本： </div>
+                    <div class="data " id="versions"> 3.0.3 </div>
+                </div>
+                <div class="row">
+                    <div class="name ">当前时间：</div>
+                    <div class="data " id="getTime"> 暂无数据 </div>
+                </div>
+                <div class="row">
+                    <div class="name ">PC IP地址：</div>
+                    <div class="data " id="ipAddress"> 192.168.0.1 </div>
+                </div>
+                <div class="row">
+                    <div class="name ">CPU 使用率： </div>
+                    <div class="data " id="cpuUtilization"> 30% </div>
+                </div>
+            
+                <div class="row">
+                    <div class="name ">加速度计信息： </div>
+                    <div class="data1 "> 
+                            <table class="table table-border table-bordered">
+                                    <thead class="text-c">
+                                            <tr>
+                                              <th>x</th>
+                                              <th>y</th>
+                                              <th>z</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="text-c">
+                                              <td id="accel_x">10.08</td>
+                                              <td id="accel_y">0.30</td>
+                                              <td id="accel_z">-0.43</td>
+                                            </tr>
+                                          </tbody>
+                                  </table>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="name ">磁力计信息：</div>
+                    <div class="data1 "> 
+                            <table class="table table-border table-bordered">
+                                    <thead class="text-c">
+                                            <tr>
+                                              <th>x</th>
+                                              <th>y</th>
+                                              <th>z</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="text-c">
+                                              <td id="mag_x">-21.7</td>
+                                              <td id="mag_y">14</td>
+                                              <td id="mag_z"> 39.40</td>
+                                            </tr>
+                                          </tbody>
+                                  </table>    
+                    </div>
+                </div>
+    </main>
+    <script src="jquery.min.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
