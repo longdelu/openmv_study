@@ -11,12 +11,11 @@
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060300::V5.06 update 3 (build 300)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F429IGHx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.12.0</PackID>
+          <PackID>Keil.STM32F4xx_DFP.2.9.0</PackID>
           <PackURL>http://www.keil.com/pack</PackURL>
           <Cpu>IRAM(0x20000000,0x30000) IRAM2(0x10000000,0x10000) IROM(0x08000000,0x100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -441,14 +440,14 @@
               <FilePath>drivers\drv_eth.c</FilePath>
             </File>
             <File>
-              <FileName>drv_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>drivers\drv_i2c.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_pcf8574.c</FileName>
               <FileType>1</FileType>
               <FilePath>drivers\drv_pcf8574.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>drivers\drv_i2c.c</FilePath>
             </File>
             <File>
               <FileName>drv_spi.c</FileName>
@@ -1037,8 +1036,8 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>2</vShortEn>
                 <vShortWch>2</vShortWch>
-                <v6Lto>2</v6Lto>
-                <v6WtE>2</v6WtE>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <v6Rtti>2</v6Rtti>
                 <VariousControls>
                   <MiscControls> --c99</MiscControls>
@@ -1232,11 +1231,6 @@
               <FileName>libc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\libc\compilers\armlibc\libc.c</FilePath>
-            </File>
-            <File>
-              <FileName>libc_syms.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\libc\compilers\armlibc\libc_syms.c</FilePath>
             </File>
             <File>
               <FileName>mem_std.c</FileName>
@@ -1448,11 +1442,5 @@
       </Groups>
     </Target>
   </Targets>
-
-  <RTE>
-    <apis/>
-    <components/>
-    <files/>
-  </RTE>
 
 </Project>

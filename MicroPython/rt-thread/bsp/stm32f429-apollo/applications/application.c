@@ -135,6 +135,7 @@ void rt_init_thread_entry(void* parameter)
 	}
 #endif
 }
+
 int rt_application_init()
 {
     rt_thread_t tid;
@@ -147,7 +148,5 @@ int rt_application_init()
     if (tid != RT_NULL)
         rt_thread_startup(tid);
     
-
-
     return 0;
 }
