@@ -6,7 +6,7 @@
 # finding the center of the darkest area in the eye roi which is the pupil center.
 #
 # Note: This script does not detect a face first, use it with the telephoto lens.
-
+# 聚焦于的眼睛的瞳孔才能捕捉得到
 import sensor, time, image
 
 # Reset sensor

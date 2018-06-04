@@ -8,6 +8,7 @@
 #
 # This example demonstrates using face tracking on your OpenMV Cam to take a
 # gif.
+# 识别到人脸后，把面部特征保存为gif动画
 
 import sensor, image, time, gif, pyb
 

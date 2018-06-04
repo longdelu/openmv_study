@@ -24,7 +24,7 @@ print("You're on camera!")
 img = sensor.snapshot()
 
 img.morph(1, [+2, +1, +0,\
-              +1, +1, -1,\
+              +1, +1,   -1,\
               +0, -1, -2]) # Emboss the image.
 
 img.save("example.jpg") # or "example.bmp" (or others)
