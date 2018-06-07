@@ -59,11 +59,9 @@ while(True):
     delta_y_ave  = 0
     response_ave = 0
 
-    print("start")
-
     clock.tick() #
     i = 0;
-    for i in range(1):
+    for i in range(10):
 
         img = sensor.snapshot() # 获取一帧图像
 
@@ -74,11 +72,13 @@ while(True):
         displacement_obj  = old.find_displacement(img) #获取前面一张图像与刚捕获的图像之间的偏移
 
         # 打印原始数据，查看diaplacement对象都有哪些属性
-        print(displacement_obj)
+        #print(displacement_obj)
 
-        delta_x.append(displacement_obj.x_translation())
-        delta_y.append(displacement_obj.y_translation())
-        response.append(displacement_obj.response())
+        if (not (math.isnan(displacement_obj.x_translation()) or math.isnan(displacement_obj.y_translation()) or math.isnan(displacement_obj.response()))):
+
+           delta_x.append(displacement_obj.x_translation())
+           delta_y.append(displacement_obj.y_translation())
+           response.append(displacement_obj.response())
 
         old = img.copy()
 
@@ -92,8 +92,7 @@ while(True):
 
     print("%0.6fX   %0.6fY   %0.2fC   %0.2fFPS   %0.6fSUMX   %0.6fSUMY" % (delta_x_ave, delta_x_ave, response_ave,  clock.fps(), sumx, sumy))
 
-    if (not (math.isnan(delta_x) or math.isnan(delta_y) or math.isnan(response))):
-        #optical_flow_uart_observer.send_optical_flow_packet(10, 20, 50, 100)
-        pass
+    optical_flow_uart_observer.send_optical_flow_packet(10, 20, 50, 100)
+
 
 

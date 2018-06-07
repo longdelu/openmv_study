@@ -5,7 +5,7 @@
 # mouse tracks movement. By tacking the difference between successive images
 # you can determine instaneous displacement with your OpenMV Cam too!
 
-#import  pyb, 
+import  pyb
 
 import struct, math
 
