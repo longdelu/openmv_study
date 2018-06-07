@@ -5,7 +5,9 @@
 # mouse tracks movement. By tacking the difference between successive images
 # you can determine instaneous displacement with your OpenMV Cam too!
 
-import  pyb, struct, math
+#import  pyb, 
+
+import struct, math
 
 uart = pyb.UART(3, 9600)
 
@@ -62,7 +64,7 @@ def SDS_OutPut_Data(SDS_OutData = []):
 
     for i in range(10):
 
-        temp = struct.pack("<b",
+        temp = struct.pack("<B",
                            databuf[i])
         uart.write(temp)
 
@@ -81,5 +83,6 @@ def send_optical_flow_packet(x, y, sum_x, sum_y):
 
 #while True:
 
-#     send_optical_flow_packet(10, 20, 50, 100);
+     #send_optical_flow_packet(10, 20, 50, 100);
+
 
