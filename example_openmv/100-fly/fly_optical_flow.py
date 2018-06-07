@@ -8,6 +8,8 @@
 
 import sensor, image, time, pyb, struct, math
 
+import optical_flow_uart_observer
+
 sensor.reset() # Initialize the camera sensor.
 sensor.set_pixformat(sensor.GRAYSCALE) # or sensor.GRAYSCALE
 sensor.set_framesize(sensor.B64X64) # or B40x30 or B64x64
@@ -19,16 +21,6 @@ uart = pyb.UART(3, 115200, timeout_char = 1000)
 
 sumx = 0.0
 sumy = 0.0
-
-def send_optical_flow_packet(x, y, c):
-    temp = struct.pack("<bbiii",
-                       0xAA,
-                       0xAE,
-                       int(x * 100000 ), # up sample by 4
-                       int(y * 100000 ), # up sample by 4
-                       int(c * 100000))
-    uart.write(temp)
-
 
 while(True):
 
@@ -49,13 +41,12 @@ while(True):
     delta_y = displacement_obj.y_translation()
     response = displacement_obj.response()
 
-    print("%0.6fX   %0.6fY   %0.2fC   %0.2fFPS" % (delta_x, delta_y, response, clock.fps()))
     sumx += delta_x
     sumy += delta_y
 
+    print("%0.6fX   %0.6fY   %0.2fC   %0.2fFPS   %0.6fSUMX   %0.6fSUMY" % (delta_x, delta_y, response,  clock.fps(), sumx, sumy))
 
-    #print("%fX   %fY" % (sumx, sumy))
     if (not (math.isnan(delta_x) or math.isnan(delta_y) or math.isnan(response))):
-        send_optical_flow_packet(delta_x, delta_y, response)
+        optical_flow_uart_observer.send_optical_flow_packet(delta_x, delta_y, sumx, sumy)
 
     old = img.copy()

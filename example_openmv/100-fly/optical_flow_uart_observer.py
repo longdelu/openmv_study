@@ -5,25 +5,81 @@
 # mouse tracks movement. By tacking the difference between successive images
 # you can determine instaneous displacement with your OpenMV Cam too!
 
-import sensor, image, time
+import  pyb, struct, math
 
-sensor.reset() # Initialize the camera sensor.
-sensor.set_pixformat(sensor.GRAYSCALE) # or sensor.GRAYSCALE
-sensor.set_framesize(sensor.B64x32) # or B40x30 or B64x64
-clock = time.clock() # Tracks FPS.
+uart = pyb.UART(3, 9600)
 
-# NOTE: The find_displacement function works by taking the 2D FFTs of the old
-# and new images and compares them using phase correlation. Your OpenMV Cam
-# only has enough memory to work on two 64x64 FFTs (or 128x32, 32x128, or etc).
-old = sensor.snapshot()
+def CRC_CHECK(Buf = [],  CRC_CNT = 0):
 
-while(True):
-    clock.tick() # Track elapsed milliseconds between snapshots().
-    img = sensor.snapshot() # Take a picture and return the image.
+    #print("crc_check buf and cnt", Buf, CRC_CNT)
 
-    [delta_x, delta_y, response] = old.find_displacement(img)
+    CRC_Temp = 0xffff
 
-    old = img.copy()
+    for i in range(CRC_CNT):
 
-    print("%0.1f X\t%0.1f Y\t%0.2f QoR\t%0.2f FPS" % \
-        (delta_x, delta_y, response, clock.fps()))
+        CRC_Temp ^= Buf[i]
+
+        for j in range(8):
+
+            if (CRC_Temp & 0x01):
+
+                CRC_Temp = (CRC_Temp >> 1 ) ^ 0xa001
+            else:
+                CRC_Temp = CRC_Temp >> 1
+
+
+    return(CRC_Temp)
+
+
+def SDS_OutPut_Data(SDS_OutData = []):
+
+    temp1   = [0, 0, 0, 0]
+    databuf = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+    CRC16   = 0;
+
+    #print("SDS_OutData is ", SDS_OutData)
+
+    for i in range(4):
+        temp1[i] = int(SDS_OutData[i])
+
+    #print ("temp1", temp1)
+
+    for i in range(4):
+
+        databuf[i * 2]     = (temp1[i] % 256)
+        databuf[i * 2 + 1] = (temp1[i] // 256)
+
+
+    CRC16 = CRC_CHECK(databuf,8)
+
+    databuf[8] = CRC16 % 256
+
+    databuf[9] = CRC16 // 256
+
+
+    #print ("databuf", databuf)
+
+    for i in range(10):
+
+        temp = struct.pack("<b",
+                           databuf[i])
+        uart.write(temp)
+
+        pass
+
+def send_optical_flow_packet(x, y, sum_x, sum_y):
+
+    SDS_OutData = [0.0, 0.0, 0.0, 0.0]
+
+    SDS_OutData[0] = x
+    SDS_OutData[1] = y
+    SDS_OutData[2] = sum_x
+    SDS_OutData[3] = sum_y
+
+    SDS_OutPut_Data(SDS_OutData)
+
+#while True:
+
+#     send_optical_flow_packet(10, 20, 50, 100);
+
