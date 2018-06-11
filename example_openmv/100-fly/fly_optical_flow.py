@@ -8,7 +8,7 @@
 
 import sensor, image, time, pyb, struct, math
 
-import optical_flow_uart_observer
+#import optical_flow_uart_observer
 
 sensor.reset() # Initialize the camera sensor.
 sensor.set_pixformat(sensor.GRAYSCALE) # or sensor.GRAYSCALE
@@ -19,6 +19,8 @@ old = sensor.snapshot()
 
 sumx = 0.0
 sumy = 0.0
+
+uart = pyb.UART(3, 115200)
 
 
 def filter(buf, total_size, win_size):
@@ -48,7 +50,75 @@ def filter(buf, total_size, win_size):
 
     return ave
 
-while(True):
+
+def send_optical_flow_packet(x, y, c):
+
+    sum = 0
+    sum_verify = 0
+
+
+    int_x = int(x * 100000 )
+    int_y = int(y * 100000 )
+    int_c = int(c * 100000 )
+
+    sum += 0xAA
+    sum += 0xAA
+    sum += 0xF1
+    sum += 0x0C
+    sum += ((int_x >> 24) & 0x000000ff)
+    sum += ((int_x >> 16) & 0x000000ff)
+    sum += ((int_x >> 8) & 0x000000ff)
+    sum += ((int_x >> 0) & 0x000000ff)
+
+    sum += ((int_y >> 24) & 0x000000ff)
+    sum += ((int_y >> 16) & 0x000000ff)
+    sum += ((int_y >> 8) & 0x000000ff)
+    sum += ((int_y >> 0) & 0x000000ff)
+
+    sum += ((int_c >> 24) & 0x000000ff)
+    sum += ((int_c >> 16) & 0x000000ff)
+    sum += ((int_c >> 8) & 0x000000ff)
+    sum += ((int_c >> 0) & 0x000000ff)
+
+    print("sum no right", sum)
+
+    sum = (sum & 0x000000ff)
+
+
+    temp = struct.pack("<BBBBBBBBBBBBBBBBB",
+                        0xAA,
+                        0xAA,
+                        0xF1,
+                        0x0C,
+                        ((int_x >> 24) & 0x000000ff),
+                        ((int_x >> 16) & 0x000000ff),
+                        ((int_x >> 8) & 0x000000ff),
+                        ((int_x >> 0) & 0x000000ff),
+
+                        ((int_y >> 24) & 0x000000ff),
+                        ((int_y >> 16) & 0x000000ff),
+                        ((int_y >> 8) & 0x000000ff),
+                        ((int_y >> 0) & 0x000000ff),
+
+                        ((int_c >> 24) & 0x000000ff),
+                        ((int_c >> 16) & 0x000000ff),
+                        ((int_c >> 8) & 0x000000ff),
+                        ((int_c >> 0) & 0x000000ff),
+
+                        sum)
+
+    print("int_x", int_x >> 24, ((int_x >> 16) & 0x00ff), ((int_x >> 8) & 0x0000ff),((int_x >> 0) & 0x000000ff))
+    print("int_y", int_y >> 24, ((int_y >> 16) & 0x00ff), ((int_y >> 8) & 0x0000ff),((int_y >> 0) & 0x000000ff))
+    print("int_c", int_c >> 24, ((int_c >> 16) & 0x00ff), ((int_c >> 8) & 0x0000ff),((int_c >> 0) & 0x000000ff))
+    print("sum", sum)
+    print("temp str", temp)
+
+    uart.write(temp)
+
+    pyb.delay(20)
+
+aa = True
+while(aa):
 
     delta_x  = []
     delta_y  = []
@@ -61,7 +131,7 @@ while(True):
 
     clock.tick() #
     i = 0;
-    for i in range(10):
+    for i in range(1):
 
         img = sensor.snapshot() # 获取一帧图像
 
@@ -83,16 +153,17 @@ while(True):
         old = img.copy()
 
 
-    delta_x_ave  = filter(delta_x, 10, 6)
-    delta_y_ave  = filter(delta_y, 10, 6)
-    response_ave = filter(response, 10, 6)
+    #delta_x_ave  = filter(delta_x, 10, 6)
+    #delta_y_ave  = filter(delta_y, 10, 6)
+    #response_ave = filter(response, 10, 6)
 
     sumx += delta_x_ave
     sumy += delta_y_ave
 
-    print("%0.6fX   %0.6fY   %0.2fC   %0.2fFPS   %0.6fSUMX   %0.6fSUMY" % (delta_x_ave, delta_x_ave, response_ave,  clock.fps(), sumx, sumy))
-
-    optical_flow_uart_observer.send_optical_flow_packet(10, 20, 50, 100)
+    #print("%0.6fX   %0.6fY   %0.2fC   %0.2fFPS   %0.6fSUMX   %0.6fSUMY" % (delta_x_ave, delta_x_ave, response_ave,  clock.fps(), sumx, sumy))
+    send_optical_flow_packet(delta_x[0], delta_y[0], response[0])
+    #optical_flow_uart_observer.send_optical_flow_packet(10, 20, 50, 100)
+    #aa = 0
 
 
 
